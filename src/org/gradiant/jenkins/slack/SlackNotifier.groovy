@@ -90,7 +90,7 @@ void notifyResultWithMessage(String message = null) {
   if (message) messageBody += message;
   if (testSummary) messageBody += '\n' + testSummary;
 
-  def message = formatter.format "${statusMessage} after ${duration}", changes, messageBody
+  def slackMessage = formatter.format "${statusMessage} after ${duration}", changes, messageBody
 
-  sender.send message, color
+  sender.send slackMessage, color
 }
