@@ -64,3 +64,33 @@ void notifyResultFull() {
   env.NOTIFY_SUCCESS = true
   notifyResult()
 }
+
+void notifyResultWithMessage(String message = null) {
+  JenkinsHelper helper = new JenkinsHelper()
+  JenkinsStatus status = new JenkinsStatus()
+  SlackFormatter formatter = new SlackFormatter()
+  SlackSender sender = new SlackSender()
+  Config config = new Config()
+
+  def statusMessage = status.getStatusMessage()
+
+  def color = status.getStatusColor()
+  def duration = helper.getDuration()
+
+  String changes = null
+  if(config.getChangeList()) changes = helper.getChanges().join '\n'
+
+  String testSummary = null
+  if (config.getTestSummary()) {
+    JenkinsTestsSummary jenkinsTestsSummary = new JenkinsTestsSummary()
+    testSummary = jenkinsTestsSummary.getTestSummary()
+  }
+
+  String messageBody = '';
+  if (message) messageBody += message;
+  if (testSummary) messageBody += '\n' + testSummary;
+
+  def message = formatter.format "${statusMessage} after ${duration}", changes, messageBody
+
+  sender.send message, color
+}
