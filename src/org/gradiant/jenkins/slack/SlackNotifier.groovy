@@ -12,6 +12,16 @@ void notifyStart() {
   sender.send message, color
 }
 
+void notifyStartWithMessage(String message = null) {
+  SlackFormatter formatter = new SlackFormatter()
+  SlackSender sender = new SlackSender()
+  JenkinsStatus status = new JenkinsStatus()
+
+  def message = formatter.format "Build started... ${message}"
+  def color = status.getStatusColor()
+
+  sender.send message, color
+}
 
 void notifyError(Throwable err) {
   def formatter = new SlackFormatter()
