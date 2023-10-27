@@ -17,10 +17,10 @@ void notifyStartWithMessage(String message = null) {
   SlackSender sender = new SlackSender()
   JenkinsStatus status = new JenkinsStatus()
 
-  def message = formatter.format "Build started... ${message}"
+  def slackMessage = formatter.format "Build started... ${message}"
   def color = status.getStatusColor()
 
-  sender.send message, color
+  sender.send slackMessage, color
 }
 
 void notifyError(Throwable err) {
